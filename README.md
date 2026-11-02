@@ -37,7 +37,8 @@ cd api && npm install && npm run dev
 cd web && npm install && npm run dev
 ```
 
-API는 시작할 때 DB 연결을 기다렸다가 스키마와 시드 데이터를 멱등하게 입력한다.
+API는 시작할 때 DB에 연결될 때까지 기다린 뒤, 테이블 구조(스키마)와 기본 메뉴 데이터를 만든다.
+이미 있는 것은 새로 만들지 않고 갱신만 하므로, 몇 번을 다시 시작해도 결과가 같다(멱등).
 DB 접속 정보는 모두 환경 변수(`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `PORT`)로 받으며, `.env` 는 Git에 올리지 않는다.
 
 테스트: `cd api && npm test`
