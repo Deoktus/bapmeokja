@@ -1,0 +1,26 @@
+# 다른 실습의 Ingress(grafana.localhost, shop.localhost 등)와 겹치지 않도록 전용 호스트를 쓴다
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bapmeokja
+  namespace: bapmeokja
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: bapmeokja.localhost
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port:
+                  number: 3000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80

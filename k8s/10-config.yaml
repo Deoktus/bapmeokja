@@ -1,0 +1,11 @@
+# 비밀이 아닌 설정. DB 비밀번호는 Secret(db-credentials)로 따로 만든다 (README 참고).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: bapmeokja
+data:
+  DB_HOST: db
+  DB_PORT: "5432"
+  DB_USER: bapmeokja
+  DB_NAME: bapmeokja
