@@ -1,0 +1,20 @@
+[Unit]
+Description=Bapmeokja API
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=lab
+WorkingDirectory=/home/lab/bapmeokja/api
+EnvironmentFile=/etc/bapmeokja/api.env
+ExecStart=/usr/bin/node src/server.js
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target
