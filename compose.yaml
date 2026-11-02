@@ -1,0 +1,59 @@
+name: bapmeokja
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bapmeokja
+      POSTGRES_DB: bapmeokja
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?.env 파일에 DB_PASSWORD를 적어 주세요}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bapmeokja -d bapmeokja"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+
+  api:
+    build: ./api
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: bapmeokja
+      DB_PASSWORD: ${DB_PASSWORD:?.env 파일에 DB_PASSWORD를 적어 주세요}
+      DB_NAME: bapmeokja
+    depends_on:
+      db:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  web:
+    build: ./web
+    restart: unless-stopped
+    # VM 안쪽 주소에만 열어 두고 VS Code 포트 전달로 접속한다
+    ports:
+      - "127.0.0.1:8088:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  pgdata:
